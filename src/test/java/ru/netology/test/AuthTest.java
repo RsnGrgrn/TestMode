@@ -2,6 +2,7 @@ package ru.netology.test;
 
 import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
 import ru.netology.entities.RegistrationDto;
 import ru.netology.utils.DataGenerator;
 
@@ -12,16 +13,19 @@ import static com.codeborne.selenide.Selenide.open;
 
 public class AuthTest {
 
+
     @Test
     public void shouldSuccessfulLoginIfRegisteredActiveUser() {
+
         RegistrationDto info = DataGenerator
                 .Authorization
                 .generateInfo("en", "active");
 
         open("http://localhost:9999/");
-        $("[data-test-id=login] input").setValue(info.getName());
+        $("[data-test-id=login] input").setValue(info.getLogin());
         $("[data-test-id=password] input").setValue(info.getPassword());
         $("[data-test-id=action-login] span").click();
+        $("h2").shouldHave(text("  Личный кабинет"));
     }
 
     @Test
@@ -31,7 +35,7 @@ public class AuthTest {
                 .generateInfo("en", "blocked");
 
         open("http://localhost:9999/");
-        $("[data-test-id=login] input").setValue(info.getName());
+        $("[data-test-id=login] input").setValue(info.getLogin());
         $("[data-test-id=password] input").setValue(info.getPassword());
         $("[data-test-id=action-login] span").click();
         $(".notification__title").shouldHave(text("Ошибка"));
@@ -67,7 +71,7 @@ public class AuthTest {
                 .generateInvalidPassword("en");
 
         open("http://localhost:9999/");
-        $("[data-test-id=login] input").setValue(info.getName());
+        $("[data-test-id=login] input").setValue(info.getLogin());
         $("[data-test-id=password] input").setValue(invalidPassword);
         $("[data-test-id=action-login] span").click();
         $(".notification__title").shouldHave(text("Ошибка"));
